@@ -110,8 +110,8 @@ class Average:
         :param args3:
         :return:
         """
-        m, n = X.shape
-        pred = np.zeros((m, 1), dtype=np.int)
+        m, _ = X.shape
+        pred = np.zeros((m, 1))
         if method == 'Method 1':  # r = ru
             for i in range(m):
                 pred[i, 0] = args1[X[i, 0] - 1]
@@ -120,7 +120,7 @@ class Average:
                 pred[i, 0] = args1[X[i, 1] - 1]
         elif method == 'Method 3':  # r = ru/2 + ri/2
             for i in range(m):
-                pred[i, 0] = args1[X[i, 0] - 1] / 2 + args2[X[i, 0] - 1] / 2
+                pred[i, 0] = args1[X[i, 0] - 1] / 2 + args2[X[i, 1] - 1] / 2
         elif method == 'Method 4':  # r = bu + ri
             for i in range(m):
                 pred[i, 0] = args1[X[i, 0] - 1] + args2[X[i, 1] - 1]
@@ -130,13 +130,12 @@ class Average:
         else:  # r = r(global average) + bu + bi
             for i in range(m):
                 pred[i, 0] = args1 + args2[X[i, 0] - 1] + args3[X[i, 1] - 1]
-        return pred
+        return pred.flatten()
 
 
 def main():
     # Load train data
     data = np.genfromtxt('C:\\Users\\Jack\\Desktop\\Data\\ml-100k\\ml-100k\\u1.base', delimiter='	', dtype=np.int)
-    print(data.shape)
     users = data[:, 0]
     items = data[:, 1]
     ratings = data[:, 2]
@@ -152,32 +151,31 @@ def main():
     ru = avg.user_average()
     ri = avg.item_average()
     bu, bi = avg.bias(avg.user_average(), avg.item_average())
-
     # training and compute accuracy
     pred = avg.prediction(X, args1=ru, method='Method 1')
     print('Method 1')
-    print(avg.RMSE(pred, y))
-    print(avg.MAE(pred, y))
+    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
+    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
     pred = avg.prediction(X, args1=ri, method='Method 2')
     print('Method 2')
-    print(avg.RMSE(pred, y))
-    print(avg.MAE(pred, y))
+    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
+    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
     pred = avg.prediction(X, args1=ru, args2=ri, method='Method 3')
     print('Method 3')
-    print(avg.RMSE(pred, y))
-    print(avg.MAE(pred, y))
+    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
+    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
     pred = avg.prediction(X, args1=bu, args2=ri, method='Method 4')
     print('Method 4')
-    print(avg.RMSE(pred, y))
-    print(avg.MAE(pred, y))
+    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
+    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
     pred = avg.prediction(X, args1=ru, args2=bi, method='Method 5')
     print('Method 5')
-    print(avg.RMSE(pred, y))
-    print(avg.MAE(pred, y))
+    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
+    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
     pred = avg.prediction(X, args1=r, args2=bu, args3=bi, method='Method 6')
     print('Method 6')
-    print(avg.RMSE(pred, y))
-    print(avg.MAE(pred, y))
+    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
+    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
 
 
 if __name__ == '__main__':
