@@ -1,5 +1,7 @@
 import numpy as np
 import warnings
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class Average:
@@ -132,6 +134,25 @@ class Average:
                 pred[i, 0] = args1 + args2[X[i, 0] - 1] + args3[X[i, 1] - 1]
         return pred.flatten()
 
+    @staticmethod
+    def plot(data):
+        data = np.round(data, 4)
+        fig, ax = plt.subplots()
+        # hide axes
+        fig.patch.set_visible(False)
+        ax.axis('off')
+        ax.axis('tight')
+        df = pd.DataFrame(data, columns=('RMSE', 'MAE'))
+        row_labels = ('$\hat{r}_{ui} = \overline{r}_u$',
+                      '$\hat{r}_{ui} = \overline{r}_i$',
+                      '$\hat{r}_{ui} = \overline{r}_u / 2 + \overline{r}_i / 2$',
+                      '$\hat{r}_{ui} = b_u + \overline{r}_i$',
+                      '$\hat{r}_{ui} = \overline{r}_u + b_i $',
+                      '$\hat{r}_{ui} = \overline{r} + b_u + b_i$')
+        ax.table(cellText=df.values, rowLabels=row_labels, colLabels=df.columns, loc='center')
+        plt.title('Evaluation')
+        plt.show()
+
 
 def main():
     # Load train data
@@ -154,28 +175,42 @@ def main():
     # training and compute accuracy
     pred = Average.prediction(X, args1=ru, method='Method 1')
     print('Method 1')
-    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
-    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
+    rmse1 = avg.RMSE(pred, y)
+    mae1 = avg.MAE(pred, y)
+    print('RMSE:  {:f}'.format(rmse1))
+    print('MAE:   {:f}'.format(mae1))
     pred = Average.prediction(X, args1=ri, method='Method 2')
     print('Method 2')
-    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
-    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
+    rmse2 = avg.RMSE(pred, y)
+    mae2 = avg.MAE(pred, y)
+    print('RMSE:  {:f}'.format(rmse2))
+    print('MAE:   {:f}'.format(mae2))
     pred = Average.prediction(X, args1=ru, args2=ri, method='Method 3')
     print('Method 3')
-    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
-    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
+    rmse3 = avg.RMSE(pred, y)
+    mae3 = avg.MAE(pred, y)
+    print('RMSE:  {:f}'.format(rmse3))
+    print('MAE:   {:f}'.format(mae3))
     pred = Average.prediction(X, args1=bu, args2=ri, method='Method 4')
     print('Method 4')
-    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
-    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
+    rmse4 = avg.RMSE(pred, y)
+    mae4 = avg.MAE(pred, y)
+    print('RMSE:  {:f}'.format(rmse4))
+    print('MAE:   {:f}'.format(mae4))
     pred = Average.prediction(X, args1=ru, args2=bi, method='Method 5')
     print('Method 5')
-    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
-    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
+    rmse5 = avg.RMSE(pred, y)
+    mae5 = avg.MAE(pred, y)
+    print('RMSE:  {:f}'.format(rmse5))
+    print('MAE:   {:f}'.format(mae5))
     pred = Average.prediction(X, args1=r, args2=bu, args3=bi, method='Method 6')
     print('Method 6')
-    print('RMSE:  {:f}'.format(avg.RMSE(pred, y)))
-    print('MAE:   {:f}'.format(avg.MAE(pred, y)))
+    rmse6 = avg.RMSE(pred, y)
+    mae6 = avg.MAE(pred, y)
+    print('RMSE:  {:f}'.format(rmse6))
+    print('MAE:   {:f}'.format(mae6))
+    data = np.array([rmse1, mae1, rmse2, mae2, rmse3, mae3, rmse4, mae4, rmse5, mae5, rmse6, mae6]).reshape(6, 2)
+    Average.plot(data)
 
 
 if __name__ == '__main__':
