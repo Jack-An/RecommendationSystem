@@ -135,7 +135,7 @@ class Average:
         return pred.flatten()
 
     @staticmethod
-    def plot(data):
+    def plot(data, label):
         data = np.round(data, 4)
         fig, ax = plt.subplots()
         # hide axes
@@ -143,13 +143,7 @@ class Average:
         ax.axis('off')
         ax.axis('tight')
         df = pd.DataFrame(data, columns=('RMSE', 'MAE'))
-        row_labels = ('$\hat{r}_{ui} = \overline{r}_u$',
-                      '$\hat{r}_{ui} = \overline{r}_i$',
-                      '$\hat{r}_{ui} = \overline{r}_u / 2 + \overline{r}_i / 2$',
-                      '$\hat{r}_{ui} = b_u + \overline{r}_i$',
-                      '$\hat{r}_{ui} = \overline{r}_u + b_i $',
-                      '$\hat{r}_{ui} = \overline{r} + b_u + b_i$')
-        ax.table(cellText=df.values, rowLabels=row_labels, colLabels=df.columns, loc='center')
+        ax.table(cellText=df.values, rowLabels=label, colLabels=df.columns, loc='center')
         plt.title('Evaluation')
         plt.show()
 
@@ -210,7 +204,13 @@ def main():
     print('RMSE:  {:f}'.format(rmse6))
     print('MAE:   {:f}'.format(mae6))
     data = np.array([rmse1, mae1, rmse2, mae2, rmse3, mae3, rmse4, mae4, rmse5, mae5, rmse6, mae6]).reshape(6, 2)
-    Average.plot(data)
+    row_labels = ('$\hat{r}_{ui} = \overline{r}_u$',
+                  '$\hat{r}_{ui} = \overline{r}_i$',
+                  '$\hat{r}_{ui} = \overline{r}_u / 2 + \overline{r}_i / 2$',
+                  '$\hat{r}_{ui} = b_u + \overline{r}_i$',
+                  '$\hat{r}_{ui} = \overline{r}_u + b_i $',
+                  '$\hat{r}_{ui} = \overline{r} + b_u + b_i$')
+    Average.plot(data, row_labels)
 
 
 if __name__ == '__main__':
