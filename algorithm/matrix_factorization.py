@@ -241,7 +241,7 @@ def main():
     pred = MatrixFactor.pmf_predict(X, U, V)
     rmse3 = MatrixFactor.RMSE(pred, y)
     mae3 = MatrixFactor.MAE(pred, y)
-    print('PMF')
+    print('PMF:')
     print('RMSE :{:f}'.format(rmse3))
     print('MAE  :{:f}'.format(mae3))
 
