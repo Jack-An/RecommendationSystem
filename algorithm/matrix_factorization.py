@@ -10,6 +10,10 @@ class MatrixFactor(Average):
     the rating matrix.
     Other method will not use any method or property in Average,
     so the other method will be static. (except evaluation and plot method)
+    Note :
+    1. U is latent matrix for each user
+    2. V is latent matrix for each item
+    3. alpha_u,alpha_v,beta_u,beta_v,gamma is the parameters we had to set by ourselves
     """
 
     def __init__(self, user, item, ratings):
