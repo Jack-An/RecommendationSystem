@@ -1,5 +1,6 @@
 import numpy as np
 from algorithm.average_filling import Average
+from algorithm.matrix_factorization import MatrixFactor
 
 
 class SVDPP(Average):
@@ -28,6 +29,7 @@ class SVDPP(Average):
         grad_bi = e + beta_v * bi
         grad_mu = e
         grad_Wi = e * Vi / np.sqrt(np.size(Iu)) + alpha_w * W[item - 1]
+
         return grad_Uu, grad_Vi, grad_Wi, grad_bu, grad_bi, grad_mu
 
     def sgd_svd_pp(self, T, X, mu, bu, bi, alpha_u, alpha_v, alpha_w, beta_u, beta_v, gamma):
@@ -92,8 +94,23 @@ def main():
     pred = svd.predict_svd_pp(X, U, V, W, bu, bi, mu)
     rmse1 = svd.RMSE(pred, y)
     mae1 = svd.MAE(pred, y)
+    print('SVD++')
     print('RMSE : {:f}'.format(rmse1))
     print('MAE  :{:f}'.format(mae1))
+    iterations = 20
+    U, V, bu, bi, mu = MatrixFactor.rsvd(iterations, data[:, :3], mu, bu, bi,
+                                         alpha_u, alpha_v,
+                                         beta_u, beta_v,
+                                         gamma)
+    pred = MatrixFactor.rsvd_predict(X, U, V, bu, bi, mu)
+    print('RSVD:')
+    rmse2 = MatrixFactor.RMSE(pred, y)
+    mae2 = MatrixFactor.MAE(pred, y)
+    print('RMSE : {:f}'.format(rmse2))
+    print('MAE  : {:f}'.format(mae2))
+    plot_data = np.array([rmse1, mae1, rmse2, mae2]).reshape(2, 2)
+    labels = ('SVD++', 'RSVD')
+    svd.plot(plot_data, labels)
 
 
 if __name__ == '__main__':
