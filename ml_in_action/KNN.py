@@ -15,16 +15,19 @@ def load_data(filename):
 def kNN(X_train, X_test, y_train, k):
     pred = []
     for t in X_test:
-        # calculate the distance
+        # calculate the distance with L2 norm
         dis = np.linalg.norm(X_train - t, axis=1)
         # get k nearest neighbor
         nn = np.argsort(dis)[:k]
         nn_labels = y_train[nn]
+        # get neighbor label which is most frequency
         pred.append(np.bincount(nn_labels).argmax())
     return pred
 
 
 def normalization(X):
+    # normalization the input matrix X if necessary
+    # mu and sigma will be used for new input test set
     mu = np.mean(X, axis=0)
     sigma = np.std(X, axis=0)
     X = (X - mu) / sigma
