@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+
 def load_data(filename):
     data = np.genfromtxt(filename, delimiter='	')
     p = np.random.permutation(data.shape[0])
