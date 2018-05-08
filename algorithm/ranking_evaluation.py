@@ -1,10 +1,12 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
-def data_precess(filenama):
-    data = np.genfromtxt(filenama, delimiter=',', dtype=np.int)
+def data_precess(filename):
+    data = np.genfromtxt(filename, delimiter=',', dtype=np.int)
     index = np.where(data[:, 2] >= 4)
-    return data[index][:, :3]
+    return data[index][:, :2]
 
 
 def precision(Ire, Ite, test_users, K):
@@ -184,6 +186,19 @@ def real_set(test, test_users):
     return Ite
 
 
+def plot(data, label):
+    data = np.round(data, 4)
+    fig, ax = plt.subplots()
+    # hide axes
+    fig.patch.set_visible(False)
+    ax.axis('off')
+    ax.axis('tight')
+    df = pd.DataFrame(data, columns=('PopRank',))
+    ax.table(cellText=df.values, rowLabels=label, colLabels=df.columns, loc='center')
+    plt.title('Evaluation')
+    plt.show()
+
+
 def main():
     trainfile = 'C:/Users/Jack/Desktop/Data/ml/u1.base.csv'
     testfile = 'C:/Users/Jack/Desktop/Data/ml/u1.test.csv'
@@ -195,6 +210,7 @@ def main():
     bi = bias(data, num_users, num_items)
     test = data_precess(testfile)  # load test data
     Ire = recommend(Iu, bi, num_users, 5)
+    print(Ire)
     test_users = np.unique(test[:, 0])
     Ite = real_set(test, test_users)
     # Ranking Evaluation
@@ -217,6 +233,9 @@ def main():
     Rte = __Rte__(data, test, test_users)
     auc = AUC(bi, Rte, test_users)
     print('AUC   : {:f}'.format(auc[1]))
+    data = np.array([prec[1], rec[1], f1[1], ndcg[1], one[1], mrr[1], mp[1], arp[1], auc[1]]).reshape(9, 1)
+    labels = ('Pre@5', 'Rec@5', 'F1@5', 'NDCG@5', '1-call@5', 'MRR', 'MAP', 'ARP', 'AUC')
+    plot(data, labels)
 
 
 if __name__ == '__main__':

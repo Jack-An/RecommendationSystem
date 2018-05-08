@@ -166,7 +166,7 @@ def main():
     ru = avg.user_average()
     ri = avg.item_average()
     bu, bi = avg.bias(avg.user_average(), avg.item_average())
-    print(bi)
+    print(bu)
     # training and compute accuracy
     pred = Average.prediction(X, args1=ru, method='Method 1')
     print('Method 1')
